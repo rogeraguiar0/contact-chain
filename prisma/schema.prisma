@@ -27,5 +27,5 @@ model Contacts {
   telephone String @db.VarChar(15)
   createdAt DateTime @default(now())
   client Client @relation(fields: [clientId], references: [id])
-  clientId String @unique
+  clientId String
 }

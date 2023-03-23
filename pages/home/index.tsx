@@ -1,27 +1,55 @@
-import { getSession, signOut } from "next-auth/react";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useAuth } from "../../src/contexts/authContext";
 
-const Home = () => {
+import nookies, { destroyCookie } from "nookies";
+import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
+
+interface iHomeProps {
+  email: string;
+  token: string;
+  name: string;
+}
+
+const Home = ({ email, token, name }: iHomeProps) => {
   const router = useRouter();
 
-  useEffect(() => {
-    const data = async () => {
-      const session = await getSession();
+  const logout = () => {
+    destroyCookie(null, "contact-chain-token");
+    destroyCookie(null, "contact-chain-email");
+    destroyCookie(null, "contact-chain-name");
 
-      if (!session) {
-        router.push("/");
-      }
-    };
-    data();
-  }, []);
+    router.push("/");
+  };
 
   return (
     <>
       <h1>Hello!</h1>
-      <button onClick={() => signOut({ callbackUrl: "/" })}>Sair</button>
+      <button onClick={logout}>Sair</button>
+
+      <span>{name}</span>
     </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const cookies = nookies.get(ctx);
+
+  if (!cookies["contact-chain-token"]) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      email: cookies["contact-chain-email"],
+      token: cookies["contact-chain-token"],
+      name: cookies["contact-chain-name"],
+    },
+  };
 };
 
 export default Home;
