@@ -1,54 +1,38 @@
-import { useAuth } from "../src/contexts/authContext";
-import { useRouter } from "next/router";
+import Link from "next/link";
+import Header from "../src/components/Header";
+import { Footer, Main, StyledLink } from "./styles";
 
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-
-import { iLogin } from "../src/types";
-
-const Login = () => {
-  const router = useRouter();
-  const { login } = useAuth();
-
-  const formSchema = yup.object().shape({
-    email: yup.string().required("Email obrigatório"),
-    password: yup.string().required("Senha obrigatória"),
-  });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<iLogin>({
-    resolver: yupResolver(formSchema),
-  });
-
-  const handleLogin = (data: iLogin) => {
-    login(data);
-  };
-
+const LandingPage = () => {
   return (
     <>
-      <h1>Contact Chain!</h1>
-      <p>Administre seus contatos sem dor de cabeça</p>
+      <Header />
+      <Main>
+        <h1>Bem vindo ao Contact-Chain!</h1>
 
-      <form onSubmit={handleSubmit(handleLogin)}>
-        <input {...register("email")} type="text" placeholder="Email" />
-        {errors.email?.message && <span>{errors.email.message}</span>}
-        <input
-          {...register("password")}
-          type="password"
-          placeholder="Password"
-        />
-        {errors.password?.message && <span>{errors.password.message}</span>}
-        <button type="submit">Login</button>
-      </form>
-      <button type="button" onClick={() => router.push("/register")}>
-        Cadastro
-      </button>
+        <section>
+          <p>
+            Precisando de um lugar para organizar os seus contatos de forma
+            eficiente? O <span>Contact-Chain</span> está aqui para resolver os
+            seus problemas!
+          </p>
+          <p>
+            Basta se cadastrar com o seu melhor email e fazer o login!
+            Fornecemos uma grande liberdade para adicionar, editar e remover os
+            seus contatos. Além de uma interface simples e sugestiva, também
+            temos mecanismos de busca para você!
+          </p>
+          <div>
+            <StyledLink href="/login">Login</StyledLink>
+            <StyledLink href="/register">Cadastro</StyledLink>
+          </div>
+          <p>O que está esperando? Entre e conheça nosso site!</p>
+        </section>
+      </Main>
+      <Footer>
+        <p>Copyright © 2023 Contact-Chain todos os direitos reservados.</p>
+      </Footer>
     </>
   );
 };
 
-export default Login;
+export default LandingPage;
