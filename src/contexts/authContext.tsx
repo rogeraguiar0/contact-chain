@@ -8,14 +8,14 @@ import {
 import { setCookie, parseCookies } from "nookies";
 import { useRouter } from "next/router";
 import { api } from "../api/axios";
-import { Client } from "@prisma/client";
-import { iLogin } from "../types";
+import { iLogin, iClient } from "../types";
 
 interface iAuthProvider {
   setToken: (value: string) => void;
   login: (clientData: iLogin) => void;
   token: string | undefined;
-  client: string | null;
+  client: iClient | null;
+  setClient: (value: iClient) => void;
 }
 
 interface iAuthProviderProps {
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }: iAuthProviderProps) => {
   const router = useRouter();
 
   const [token, setToken] = useState<string>("");
-  const [client, setClient] = useState<string>("");
+  const [client, setClient] = useState<iClient>({} as iClient);
 
   const login = (clientData: iLogin) => {
     api
@@ -38,17 +38,17 @@ export const AuthProvider = ({ children }: iAuthProviderProps) => {
           maxAge: 60 * 30,
           path: "/",
         });
-        setCookie(null, "contact-chain-email", res.data.email, {
+        setCookie(null, "contact-chain-email", res.data.client.email, {
           maxAge: 60 * 30,
           path: "/",
         });
-        setCookie(null, "contact-chain-name", res.data.name, {
+        setCookie(null, "contact-chain-id", res.data.client.id, {
           maxAge: 60 * 30,
           path: "/",
         });
 
         setToken(res.data.token);
-        setClient(res.data.email);
+        setClient(res.data.client);
 
         router.push("/home");
       })
@@ -60,15 +60,16 @@ export const AuthProvider = ({ children }: iAuthProviderProps) => {
 
     const fetchData = async () => {
       await api
-        .get("clients/retrieve", {
+        .get(`clients/retrieve/${cookies["contact-chain-id"]}`, {
           headers: {
             Authorization: `Bearer ${cookies["contact-chain-token"]}`,
           },
         })
         .then((res) => {
-          setToken(res.data.token);
-          setClient(res.data.email);
-          router.push("/home");
+          setClient(res.data);
+          if (!router.pathname.includes("/home")) {
+            router.push("/home");
+          }
         })
         .catch((err) => console.error(err));
     };
@@ -77,7 +78,7 @@ export const AuthProvider = ({ children }: iAuthProviderProps) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ login, token, client, setToken }}>
+    <AuthContext.Provider value={{ login, token, client, setClient, setToken }}>
       {children}
     </AuthContext.Provider>
   );

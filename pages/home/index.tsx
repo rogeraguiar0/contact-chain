@@ -1,32 +1,56 @@
-import { useAuth } from "../../src/contexts/authContext";
-
-import nookies, { destroyCookie } from "nookies";
+import nookies from "nookies";
 import { GetServerSideProps } from "next";
-import { useRouter } from "next/router";
+import Header from "../../src/components/Header";
+import { api } from "../../src/api/axios";
+import { useEffect, useState } from "react";
+import { Container } from "./styles";
+import Link from "next/link";
+import { iClient } from "../../src/types";
 
 interface iHomeProps {
   email: string;
   token: string;
-  name: string;
+  id: string;
 }
 
-const Home = ({ email, token, name }: iHomeProps) => {
-  const router = useRouter();
+const Home = ({ email, token, id }: iHomeProps) => {
+  const [clients, setClients] = useState<iClient[]>([]);
 
-  const logout = () => {
-    destroyCookie(null, "contact-chain-token");
-    destroyCookie(null, "contact-chain-email");
-    destroyCookie(null, "contact-chain-name");
+  const getClients = async () => {
+    const res = await api.get("/clients/list", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-    router.push("/");
+    return res.data;
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getClients().then((res) => setClients(res));
+    };
+    fetchData();
+  }, []);
 
   return (
     <>
-      <h1>Hello!</h1>
-      <button onClick={logout}>Sair</button>
+      <Header variant="home" first="perfil" />
 
-      <span>{name}</span>
+      <Container>
+        <h2>Lista de usuários:</h2>
+        <ul>
+          {clients.length ? (
+            clients.map((elt: iClient, i) => (
+              <Link href={`/home/client/${elt.id}`} key={i}>
+                {elt.name}
+              </Link>
+            ))
+          ) : (
+            <>Ainda não existem outros clientes</>
+          )}
+        </ul>
+      </Container>
     </>
   );
 };
@@ -47,7 +71,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     props: {
       email: cookies["contact-chain-email"],
       token: cookies["contact-chain-token"],
-      name: cookies["contact-chain-name"],
+      name: cookies["contact-chain-id"],
     },
   };
 };
