@@ -6,8 +6,6 @@ import { updateClientService } from "./_updateClient.service";
 const updateClient = async (req: NextApiRequest, res: NextApiResponse) => {
   const token = req.headers.authorization?.split(" ")[1];
 
-  console.log("token", req.headers.authorization);
-
   if (!token)
     return res.status(401).json({ message: "Missing authorization headers" });
 
