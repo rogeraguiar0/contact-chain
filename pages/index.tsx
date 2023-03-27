@@ -1,11 +1,11 @@
-import Link from "next/link";
+import Feedbacks from "../src/components/Feedbacks";
 import Header from "../src/components/Header";
 import { Footer, Main, StyledLink } from "./styles";
 
 const LandingPage = () => {
   return (
     <>
-      <Header />
+      <Header first="login" second="cadastro" />
       <Main>
         <h1>Bem vindo ao Contact-Chain!</h1>
 
@@ -23,10 +23,10 @@ const LandingPage = () => {
           </p>
           <div>
             <StyledLink href="/login">Login</StyledLink>
-            <StyledLink href="/register">Cadastro</StyledLink>
+            <StyledLink href="/cadastro">Cadastro</StyledLink>
           </div>
-          <p>O que está esperando? Entre e conheça nosso site!</p>
         </section>
+        <Feedbacks />
       </Main>
       <Footer>
         <p>Copyright © 2023 Contact-Chain todos os direitos reservados.</p>

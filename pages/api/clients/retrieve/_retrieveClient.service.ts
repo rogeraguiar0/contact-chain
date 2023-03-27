@@ -1,9 +1,9 @@
 import { prisma } from "../../../../src/api/prisma";
 
-export const retrieveClientService = async (email: string) => {
+export const retrieveClientService = async (id: string) => {
   const findClient = await prisma.client.findUnique({
     where: {
-      email,
+      id,
     },
     select: {
       id: true,

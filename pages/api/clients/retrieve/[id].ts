@@ -13,7 +13,11 @@ const retrieveClient = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!email)
     return res.status(401).json({ message: "Missing authorization headers" });
 
-  const data = await retrieveClientService(email);
+  const { id } = req.query;
+
+  if (!id) return res.status(401).json({ message: "Missing client id" });
+
+  const data = await retrieveClientService(String(id));
 
   if (!data) return res.status(404).json({ message: "User was not found" });
 

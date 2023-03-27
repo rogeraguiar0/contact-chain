@@ -19,6 +19,13 @@ export const GlobalStyles = createGlobalStyle`
     --font-size-2: 28px;
     --font-size-3: 16px;
     --font-size-4: 12px;
+
+    @media (min-width: 768px) {
+        --font-size-1: 46px;
+        --font-size-2: 38px;
+        --font-size-3: 20px;
+        --font-size-4: 16px;
+    }
 }
 
 * {

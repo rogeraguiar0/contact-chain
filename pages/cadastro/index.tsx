@@ -24,25 +24,27 @@ const Register = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<iClientRequest>({
     resolver: yupResolver(formSchema),
   });
 
-  const handleRegister = (data: iClientRequest) => {
+  const handleRegister = handleSubmit((data: iClientRequest) => {
     api
       .post("/clients/create", data)
       .then(() => {
         router.push("/login");
       })
-      .catch((err) => console.error(err));
-  };
+      .catch((err) => console.error(err))
+      .finally(() => reset());
+  });
 
   return (
     <>
-      <Header />
+      <Header first="login" second="cadastro" />
       <Container>
         <h2>Registro</h2>
-        <form onSubmit={handleSubmit(handleRegister)}>
+        <form onSubmit={handleRegister}>
           <input {...register("name")} type="text" placeholder="Nome" />
           <span>{errors.name?.message}</span>
           <input {...register("email")} type="email" placeholder="Email" />

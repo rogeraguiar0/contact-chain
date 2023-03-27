@@ -36,6 +36,16 @@ export const Container = styled.header`
         gap: 16px;
       }
     }
+
+    button {
+      background-color: transparent;
+      border: none;
+      text-decoration: underline;
+      color: var(--gray-0);
+      font-weight: bold;
+      font-size: 18px;
+      cursor: pointer;
+    }
   }
 `;
 

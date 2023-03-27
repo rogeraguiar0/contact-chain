@@ -1,4 +1,3 @@
-import { hashSync } from "bcryptjs";
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../../src/api/prisma";
 import { verify } from "../../_helpers/_index";
@@ -6,6 +5,8 @@ import { updateClientService } from "./_updateClient.service";
 
 const updateClient = async (req: NextApiRequest, res: NextApiResponse) => {
   const token = req.headers.authorization?.split(" ")[1];
+
+  console.log("token", req.headers.authorization);
 
   if (!token)
     return res.status(401).json({ message: "Missing authorization headers" });

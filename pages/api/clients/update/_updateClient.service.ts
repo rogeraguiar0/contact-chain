@@ -23,7 +23,6 @@ export const updateClientService = async (
     where: { email },
     data: data,
     select: {
-      id: true,
       name: true,
       email: true,
       telephone: true,

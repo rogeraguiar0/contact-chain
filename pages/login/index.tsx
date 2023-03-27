@@ -31,7 +31,7 @@ const Login = () => {
 
   return (
     <>
-      <Header />
+      <Header first="login" second="cadastro" />
       <Container>
         <h2>Login</h2>
 

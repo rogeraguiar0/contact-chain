@@ -46,10 +46,31 @@ export const Container = styled.main`
       justify-content: center;
       background-color: var(--gray-0);
       color: var(--gray-5);
-      border: none;
+      border: 1px solid transparent;
       border-radius: 4px;
       font-size: var(--font-size-3);
       text-decoration: none;
+      cursor: pointer;
+      transition: 400ms;
+    }
+
+    button:hover {
+      border: 1px solid var(--gray-1);
+      background-color: var(--gray-5);
+      color: var(--gray-1);
+      transition: 400ms;
+    }
+  }
+
+  @media (min-width: 768px) {
+    gap: 40px;
+
+    form {
+      input,
+      span,
+      button {
+        font-size: var(--font-size-4);
+      }
     }
   }
 `;
